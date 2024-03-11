@@ -1,0 +1,36 @@
+{% extends './base.html'%}
+
+
+
+
+{%block title %}Login - HTML{%endblock%}
+
+{%block content %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages%}
+        {{message}}
+    {% endfor %}
+    {% endif%}
+{% endwith %}
+
+<br><br><br>
+<h2>Inicia Sesión en la página</h2>
+<form action="/login" method="POST">
+    <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+    <label>
+        Usuario:
+        <input type="text" placeholder="Jeremias123" name="username">
+    </label>
+    <br>
+    <label>
+        Contraseña:
+        <input type="password" name="password">
+    </label>
+    <br>
+    <input type="submit" value="Iniciar sesión">
+</form>
+
+
+{%endblock%}

@@ -1,0 +1,8 @@
+
+<h1>Bienvenido <span style="color: red;">{{data.nombrecompleto}}</span> - FLASK APP</h1>
+
+{% if data.nombre == 'admin' %}
+    <a href="#">Ir a panel de control</a>
+{% endif %}
+
+<a href="{{ url_for('logout') }}">Logout</a>
