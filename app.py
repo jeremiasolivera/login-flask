@@ -16,7 +16,7 @@ from flask_mysqldb import MySQL
 
 # Models
 from models.ModelUser import ModelUser
-
+from models.ModelProduct import Product
 #Entities
 from models.ModelUser import User
 
@@ -95,6 +95,72 @@ def status_401(error):
     return redirect(url_for('login'))
 def status_404(error):
     return "Pagina no encontrada", 404
+
+
+"""
+    PRODUCT SECCION
+"""
+
+@app.route('/get_product')
+@login_required
+def get_product():
+    productos=[]
+    owner=current_user.id
+    row=Product.get_product(db,owner)
+    for p in row:
+        productos.append([p[0],p[1],p[2],current_user.fullname])
+    return render_template('products/get_products.html', productos=productos)
+
+@app.route('/insert_product', methods=['GET','POST'])
+@login_required
+def insert_product():
+    if request.method=='POST':
+        try:
+            nombre_producto=request.form['nombre']
+            imagen_producto=request.form['imagen']
+            owner=current_user.id
+
+            mi_producto=Product(0,nombre_producto,imagen_producto,owner)
+            Product.insert_product(db,mi_producto)
+            #print(nombre_producto,imagen_producto)
+            flash("Producto agregado correctamente")
+            return(redirect(url_for('insert_product')))
+        except Exception as ex:
+            raise Exception(ex)
+
+    return render_template('products/insert_products.html')
+
+
+
+@app.route('/delete_product/<int:id>')
+@login_required
+def delete_product(id):
+    p_eliminado=Product.delete_product(db,id)
+    if p_eliminado == True:
+        flash("Producto elimnado correctamente")
+        return redirect(url_for('get_product'))
+    else:
+        flash("Algo salió mal")
+        return redirect(url_for('get_product'))
+
+@app.route('/update_product/<int:id>', methods=['GET','POST'])
+@login_required
+def update_product(id):
+    cursor=db.connection.cursor()
+    sql="SELECT id,nombre,imagen,owner FROM productos WHERE id='{}'".format(id)
+    cursor.execute(sql)
+    product=cursor.fetchone()
+    db.connection.commit()
+    cursor.close()
+    if request.method=='POST':
+        new_product=Product(id,request.form['nombre'],request.form['imagen'],current_user.id)
+        Product.update_product(db,new_product)
+        flash("Producto actualizado correctamente")
+        return redirect(url_for('get_product'))
+    else:
+        return render_template('products/update_products.html', product=product)
+   
+
 
 
 

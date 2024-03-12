@@ -1,0 +1,36 @@
+{% extends './base.html'%}
+
+
+
+
+{%block title %}Productos - ACTUALIZAR {%endblock%}
+
+{%block content %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages%}
+        {{message}}
+    {% endfor %}
+    {% endif%}
+{% endwith %}
+
+<br><br><br>
+
+<form action="/update_product/{{product[0]}}" method="POST">
+    <input type="hidden" name="csrf_token" value="{{csrf_token()}}">
+
+    <label>
+        Nombre de producto:
+        <input type="text" name="nombre" value="{{product[1]}}">
+    </label>
+    <br>
+    <label>
+        Imagen de producto:
+        <input type="text" name="imagen" value="{{product[2]}}">
+    </label>
+    <br>
+    <input type="submit" value="Enviar">
+</form>
+
+{%endblock%}

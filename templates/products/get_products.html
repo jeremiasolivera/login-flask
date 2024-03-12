@@ -1,0 +1,34 @@
+{% extends './base.html'%}
+
+
+
+
+{%block title %}Productos - VER{%endblock%}
+
+
+{%block content %}
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages%}
+        {{message}}
+    {% endfor %}
+    {% endif%}
+{% endwith %}
+
+<br><br><br>
+
+<div style="background-color: blanchedalmond;">
+    {% for p in productos %}
+    <ul>
+        <li>Nombre: {{p[1]}}</li>
+        <li>Imagen: {{p[2]}}</li>
+        <li>Owner: {{p[3]}}</li>
+
+    </ul>
+    <a href="{{url_for('delete_product', id=p[0])}}">Eliminar producto</a>
+    <a href="{{url_for('update_product', id=p[0])}}">Actualizar producto</a>
+    {% endfor %}
+</div>
+
+{%endblock%}
